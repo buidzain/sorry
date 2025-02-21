@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorry Rain Effect</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            overflow: hidden;
+            position: relative;
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #222;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .word, .image {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            font-family: Arial, sans-serif;
+            animation: fall linear infinite;
+        }
+        .image img {
+            width: 50px;
+            height: auto;
+        }
+        @keyframes fall {
+            from { transform: translateY(-100px); opacity: 1; }
+            to { transform: translateY(100vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleRain()">Start Rain</button>
+    <audio id="bg-music" src="dagabaz.mp3" loop></audio>
+    <script>
+        let isRaining = false;
+        const audio = document.getElementById('bg-music');
+        
+        function createWord() {
+            if (!isRaining) return;
+            const word = document.createElement('div');
+            word.classList.add('word');
+            word.innerText = 'Sorry Ayeshaa';
+            document.body.appendChild(word);
+            
+            word.style.left = Math.random() * window.innerWidth + 'px';
+            word.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            setTimeout(() => word.remove(), 4000);
+        }
+        
+        function createImage() {
+            if (!isRaining) return;
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('image');
+            const img = document.createElement('img');
+            img.src = 'sorry.png';
+            imgContainer.appendChild(img);
+            document.body.appendChild(imgContainer);
+            
+            imgContainer.style.left = Math.random() * window.innerWidth + 'px';
+            imgContainer.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            setTimeout(() => imgContainer.remove(), 4000);
+        }
+        
+        function toggleRain() {
+            isRaining = !isRaining;
+            document.querySelector('.toggle-btn').innerText = isRaining ? 'Stop Rain' : 'Start Rain';
+            if (isRaining) {
+                rainInterval = setInterval(() => {
+                    createWord();
+                    createImage();
+                }, 200);
+                setTimeout(() => {
+                    audio.currentTime = 0.5; // Start from 0.5 seconds in the song timeline
+                    audio.play();
+                }, 500);
+            } else {
+                clearInterval(rainInterval);
+                audio.pause();
+                audio.currentTime = 0; // Reset to start
+            }
+        }
+    </script>
+</body>
+</html>
